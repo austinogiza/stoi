@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block css %}
+<title>Cart - St Royal Stoi </title>
+{% endblock css %}
+
+
+{% block content %}
+
+  <!--================Home Banner Area =================-->
+  <!-- breadcrumb start-->
+  <section class="breadcrumb breadcrumb_bg">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="breadcrumb_iner">
+            <div class="breadcrumb_iner_item">
+              <h2>Cart Products</h2>
+              <p>Home <span>-</span>Cart Products</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- breadcrumb start-->
+
+  <!--================Cart Area =================-->
+  <section class="cart_area padding_top">
+    <div class="container">
+      <div class="cart_inner">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Product</th>
+                <th scope="col">Price</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Total</th>
+              </tr>
+            </thead>
+	
+            <tbody>
+              {% for order_item in object.items.all %}
+              <tr>
+                <td>
+                  <div class="media">
+                    <div class="d-flex">
+                  </div>
+                    <div class="media-body">
+                      <p>{{order_item.item.title|title}}</p>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <h5>&#8358;  {{order_item.item.price|intcomma}}</h5>
+                </td>
+                <td>
+                  <div class="product_count">
+                    <a href="{{order_item.item.get_remove_single_from_cart_url}}" class="input-number-decrement"> <i class="ti-angle-down"></i></a>
+                    <input class="input-number" type="text" value="{{order_item.quantity}}">
+                    <a href="{{order_item.item.get_add_to_cart_url}}" class="input-number-increment"> <i class="ti-angle-up"></i></a>
+                  </div>
+                </td>
+                <td>
+    <a class="product-remove" href="{{order_item.item.get_remove_from_cart_url}}"> <i class="ti-trash"></i> Remove</a>
+                </td>
+              </tr>
+              {% empty %}
+              <h2>YOUR CART IS EMPTY</h2>
+              {% endfor %}
+           
+              <tr class="bottom_button">
+                <td>
+                </td>
+                <td></td>
+                <td></td>
+                <td>
+                  <div class="cupon_text float-right">
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                {% if object.get_total %}
+                <td>
+                  <h5>Total</h5>
+                </td>
+                <td>
+                  <h5> &#8358;{{ object.get_total|intcomma }}</h5>
+                </td>
+              </tr>
+  
+            </tbody>
+          </table>
+          <div class="checkout_btn_inner float-right">
+            <a class="btn_1 mt-3" href="{% url 'core:shop' %}">Continue Shopping</a>
+            <a class="btn_3 mt-3" href="{% url 'core:checkout' %}">Proceed to checkout</a>
+          </div>
+          {% else %}
+          <div class="checkout_btn_inner float-right">
+            <a class="btn_1 mt-3" href="{% url 'core:shop' %}">Continue Shopping</a>
+     
+          </div>
+
+          {% endif %}
+        </div>
+      </div>
+  </section>
+  <!--================End Cart Area =================-->
+
+{% endblock content %}

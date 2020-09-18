@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+
+{% block css %}
+  <link rel="stylesheet" href="{% static 'css/lightslider.min.css' %}">
+<title>{{product.title|title}} - St Royal Stoi</title>
+{% endblock css %}
+
+
+{% block content %}
+
+  <!-- breadcrumb start-->
+  <section class="breadcrumb breadcrumb_bg">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="breadcrumb_iner">
+            <div class="breadcrumb_iner_item">
+              <h2>{{product.title|title}}</h2>
+              <p>Home <span>-</span> {{product.title|title}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- breadcrumb start-->
+  <!--================End Home Banner Area =================-->
+
+  <!--================Single Product Area =================-->
+  <div class="product_image_area section_padding">
+    <div class="container">
+      <div class="row s_product_inner justify-content-between">
+        <div class="col-lg-7 col-xl-7">
+           <div class="product_slider_img">
+            <div id="vertical">
+              <div data-thumb="{{product.image.url}}">
+                <img src="{{product.image.url}}" alt="{{product.title|title}}" />
+              </div>
+              {% if product.image_1 %}
+              <div data-thumb="{{product.image_1.url}}">
+                <img src="{{product.image_1.url}}" alt="{{product.title|title}}"/>
+              </div>
+              {% endif %}
+              {% if product.image_2 %}
+              <div data-thumb="{{product.image_2.url}}">
+                <img src="{{product.image_2.url}}" alt="{{product.title|title}}" />
+              </div>
+              {% endif %}
+              {% if product.image_3 %}
+              <div data-thumb="{{product.image_2.url}}">
+                <img src="{{product.image_2.url}}" alt="{{product.title|title}}" />
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-5 col-xl-4">
+          <div class="s_product_text">
+       
+            <h3>{{product.title|title}}</h3>
+            <h2>&#8358; {{product.price|intcomma}}</h2>
+            <ul class="list">
+              <li>
+                <p class="active">
+                  <span>Category</span> : Household</p>
+              </li>
+              <li>
+              
+              </li>
+            </ul>
+            <p>
+       {{product.description|safe}}
+            </p>
+            <div class="card_area d-flex justify-content-between align-items-center">
+       
+              <a href="{{product.get_add_to_cart_url}}" class="btn_3">Buy Now</a>
+              <a href="{{product.get_wishlist_product}}" class="like_us"> <i class="ti-heart"></i> </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--================End Single Product Area =================-->
+
+  <!--================Product Description Area =================-->
+  <section class="product_description_area">
+    <div class="container">
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
+            aria-selected="true">Description</a>
+        </li>
+    
+        <li class="nav-item">
+          <a class="nav-link "  data-toggle="tab" href="#review" role="tab" aria-controls="review"
+            aria-selected="false">Reviews</a>
+        </li>
+      </ul>
+      <div class="tab-content " id="myTabContent">
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+          <p>{{product.description|safe}}          </p>
+
+        </div>
+
+   
+        <div class="tab-pane fade " id="review" role="tabpanel" aria-labelledby="review-tab">
+          <div class="row">
+            <div class="col-lg-6">
+      
+              <div class="review_list">
+              	{% for review in product.get_reviews%}
+                <div class="review_item">
+                  
+                  <div class="media">
+             
+                  
+                    <div class="media-body">
+                      <h3>{{review.user|title}}</h3>
+                      <h5>{{review.time}}</h5>
+                    
+                    </div>
+                  </div>
+                  <p>
+               {{review.review|safe}}
+                  </p>
+                </div>
+                {% endfor %}
+             
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="review_box">
+                <h4>Add a Review</h4>
+          
+                <form class="row contact_form"  method="post">
+           {% if request.user.is_authenticated %}
+                {% csrf_token %}
+            
+                  <div class="col-md-12">
+
+													{{ form|crispy }}
+                  </div>
+                  <div class="col-md-12 text-right">
+                    <button type="submit" value="submit" class="btn_3">
+                      Submit Now
+                    </button>
+
+                    {% else %}
+  <a href={% url 'account_login' %} class="btn_3">
+                   Login To Review
+                    </a>
+                    
+           {% endif %}
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!--================End Product Description Area =================-->
+
+
+  <!-- product_list part end-->
+  <script src="{% static 'js/lightslider.min.js' %}"></script>
+{% endblock content %}

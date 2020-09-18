@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% load humanize %}
+
+{% block css %}
+<title>Checkout - St Royal Stoi</title>
+{% endblock css %}
+
+
+{% block content %}
+
+  <!--================Home Banner Area =================-->
+  <!-- breadcrumb start-->
+  <section class="breadcrumb breadcrumb_bg">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="breadcrumb_iner">
+            <div class="breadcrumb_iner_item">
+              <h2>St Royal Stoi Checkout</h2>
+              <p>Home <span>-</span> Product Checkout</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- breadcrumb start-->
+
+  <!--================Checkout Area =================-->
+  <section class="checkout_area padding_top">
+    <div class="container">
+  
+      <div class="billing_details">
+        <div class="row">
+          <div class="col-lg-8">
+            <h3>Billing Details</h3>
+            <form class="row contact_form" method="post" >
+     {% csrf_token %}
+      
+     
+              <div class="col-md-12 form-group p_star">
+         <label for="number">   Phone Number:</label>
+     
+         {{ form.phone }}
+              </div>
+         
+  
+              <div class="col-md-12 form-group p_star">
+                <label for="add1">Address:</label>
+              
+                {{ form.address }}
+              </div>
+          
+              <div class="col-md-12 form-group p_star">
+<label for="state">State: </label>
+              
+{{ form.state }}
+              </div>
+              <div class="col-md-12 form-group p_star">
+                <label for="state">Country: </label>
+                   
+                {{ form.country }}
+                              </div>
+                        
+              <div class="col-md-12 form-group">
+                <label for="zip">Zip Code: </label>
+
+                {{ form.zip }}
+              </div>
+       <div class="col-md-12">  <button class="btn_3">Submit</button></div>
+            </form>
+          </div>
+          <div class="col-lg-4">
+            <div class="order_box">
+              <h2>Your Order</h2>
+              <ul class="list">
+                <li>
+                  <a href="#">Product
+                    <span>Total</span>
+                  </a>
+                </li>
+                {% for order_item in order.items.all %}
+                <li>
+                  <a href="{{order_item.item.get_absolute_url}}">{{ order_item.item.title|title}}    
+                    <span class="middle"> x {{ order_item.quantity }}</span>
+                    <span class="last"> &#8358; {{ order_item.item.price|intcomma}}</span>
+                  </a>
+             
+                </li>
+           {% endfor %}
+              </ul>
+              <ul class="list list_2">
+                <!-- <li>
+                  <a href="#">Subtotal
+                    <span>&#8358; {{ order.get_total|intcomma }}</span>
+                  </a>
+                </li> -->
+                <!-- <li>
+                  <a href="#">Shipping
+                    <span>Flat rate: $50.00</span>
+                  </a>
+                </li> -->
+                <li>
+                  <a href="#">Total
+                    <span>&#8358; {{ order.get_total|intcomma }}</span>
+                  </a>
+                </li>
+              </ul>
+          
+              <div class="creat_account">
+                <!-- <input type="checkbox" id="f-option4" name="selector" />
+                <label for="f-option4">I’ve read and accept the </label>
+                <a href="#">terms & conditions*</a> -->
+              </div>
+     
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!--================End Checkout Area =================-->
+
+{% endblock content %}
