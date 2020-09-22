@@ -1,4 +1,38 @@
+const messageAlert = document.querySelector('.messages');
+
+
 (function ($) {
+
+  
+setTimeout(function(){
+  $('.messages').fadeOut('slow');
+}, 3000 );
+	
+  $(window).on('load', function () {
+    $(".loader").fadeOut();
+    $("#preloder").delay(200).fadeOut("slow");
+    $(window).on('scroll', function () {
+      var scroll = $(window).scrollTop();
+      if (scroll < 400) {
+        $(".header-sticky").removeClass("sticky-bar");
+        $('#back-top').fadeOut(500);
+      } else {
+        $(".header-sticky").addClass("sticky-bar");
+        $('#back-top').fadeIn(500);
+      }
+    });
+
+  // Scroll Up
+    $('#back-top a').on("click", function () {
+      $('body,html').animate({
+        scrollTop: 0
+      }, 800);
+      return false;
+    });
+
+});
+
+
   "use strict";
 
   $('.popup-youtube, .popup-vimeo').magnificPopup({
@@ -129,6 +163,7 @@
       }
     });
   }
+  
 
 
   //single banner slider

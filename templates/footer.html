@@ -1,21 +1,26 @@
     <!--::footer_part start::-->
+
+    {% load static %}
  <footer class="footer_part">
         <div class="container">
             <div class="row justify-content-around">
                 <div class="col-sm-6 col-lg-4">
-                    <div class="single_footer_part d-flex flex-column align-items-center">
-                    			<h4 class="footer_title large_title">Us</h4>
-							<p>
-								So seed seed green that winged cattle in. Gathering thing made fly you're no 
-								divided deep moved us lan Gathering thing us land years living.
-							</p>
-							<p>
-								So seed seed green that winged cattle in. Gathering thing made fly you're no divided deep moved 
-							</p>
+                    <div class="single_footer_part d-flex flex-column align-items-start">
+                    		<div class="footer__logo">
+                        <a href="{% url 'core:home' %}"><img src="{% static 'img/logo.png' %}" alt=""></a>
+                    </div>
+                    <p>We work with a team to create profitable customers and provide you with the best and happiest materials.</p>
+                    	<p class="sm-head">
+									<span class="fa fa-location-arrow"></span>
+									Head Office
+								</p>
+								<p>F-LINE F1930 Alaba International market ojo L.G.A Lagos Ojo 108105
+                                    Lagos <br>
+                                    Nigeria</p>
                     </div>
                 </div>
                 <div class="col-sm-6 col-lg-4">
-                    <div class="single_footer_part d-flex flex-column align-items-center">
+                    <div class="single_footer_part d-flex flex-column align-items-start">
                         <h4>Quick Links</h4>
                         <ul class="list-unstyled">
                             <li><a href="{% url 'core:home' %}">Home</a></li>
@@ -27,34 +32,27 @@
                 </div>
       
                 <div class="col-sm-6 text-left  col-lg-4">
-               				<div class="single_footer_part d-flex flex-column align-items-center">
+               				<div class="single_footer_part d-flex flex-column align-items-start">
 							<h4 class="footer_title">Contact Us</h4>
 						
-                        	<p class="sm-head">
-									<span class="fa fa-location-arrow"></span>
-									Head Office
-								</p>
-								<p>F-LINE F1930 Alaba International market ojo L.G.A Lagos Ojo 108105
-                                    Lagos <br>
-                                    Nigeria</p>
+                        
 	
 								<p class="sm-head">
-									<span class="fa fa-phone"></span>
-									Phone Number
+								
 								</p>
 								<p>
-									<a href="tel:+2348184120039">0818 412 0039</a>
+									<span class="fa fa-phone mr-1"></span> <a href="tel:+2348184120039">+234818 412 0039</a>
                             <br>
-                            <a href="tel:+2348055803354">0805 580 3354</a>
+                            <span class="fa fa-phone mr-1"></span> <a href="tel:+2348055803354">+234 805 580 3354</a>
 							
 								</p>
 	
 								<p class="sm-head">
-									<span class="fa fa-envelope"></span>
-									Email
+									
+									
 								</p>
 								<p>
-<a href="mailto:admin@stroyalstoi.com">admin@stroyalstoi.com</a>
+<span class="fa fa-envelope mr-1"></span> <a href="mailto:admin@stroyalstoi.com">admin@stroyalstoi.com</a>
 								</p>
 						</div>
                 </div>
@@ -77,9 +75,9 @@ Copyright &copy; <script>document.write(new Date().getFullYear());</script> All 
                     <div class="col-lg-4">
                         <div class="footer_icon social_icon">
                             <ul class="list-unstyled">
-                                <li><a href="#" class="single_social_icon"><i class="fab fa-facebook-f"></i></a></li>
+                                {% comment %} <li><a href="#" class="single_social_icon"><i class="fab fa-facebook-f"></i></a></li>
                                 <li><a href="#" class="single_social_icon"><i class="fab fa-twitter"></i></a></li>
-                               
+                                {% endcomment %}
                             </ul>
                         </div>
                     </div>

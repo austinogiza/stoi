@@ -42,7 +42,8 @@ INSTALLED_APPS = [
              'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'paystack'   ##paystack app
+    'paystack',  ##paystack app
+    "taggit"
 ]
 
 MIDDLEWARE = [
@@ -207,3 +208,5 @@ EMAIL_HOST_PASSWORD = "sogie2020"
 
 
 ACCOUNT_FORMS = {'signup': 'core.forms.CustomSignupForm'}
+
+TAGGIT_CASE_INSENSITIVE = True

@@ -9,8 +9,7 @@ from django.urls import reverse
 from django.contrib.auth.models import AbstractUser, AbstractBaseUser
 # from taggit.managers import TaggableManager
 from ckeditor.fields import RichTextField
-
-
+from taggit.managers import TaggableManager
 
 FEATURE_CHOICES = (
     ('none', 'None'),
@@ -82,7 +81,7 @@ class Item(models.Model):
     image_2 = models.ImageField(blank=True,  null=True)
     image_3 = models.ImageField(blank=True,  null=True)
     image_4 = models.ImageField(blank=True,  null=True)
-
+    tags = TaggableManager()
     pub_date = models.DateTimeField(auto_now_add=True)
 
 

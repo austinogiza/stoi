@@ -27,4 +27,5 @@ path('payment/receipt/', views.PaystackView.as_view(), name="payment" ),
       path('payment/success/', views.ConfirmView.as_view(), name="pay" ),
         path('payment/failed/', views.FailedView.as_view(), name="pay-failed" ),
          path('search/', views.SearchListView.as_view(), name="search" ),
+          path('category/<slug>/', views.CategoryView, name='categoryview'),
 ]

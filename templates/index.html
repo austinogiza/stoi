@@ -39,34 +39,20 @@
                                 <div class="col-lg-5 col-md-8">
                                     <div class="banner_text">
                                         <div class="banner_text_iner">
-                                            <h1>LIGHTING YOUR DREAM</h1>
-                                            <p>We give you authentic products at a cheaper rate with a guarantee you can trust</p>
-                                            <a href="{% url 'core:shop' %}" class="btn_3">buy now</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="banner_img">
-                                  <div class="col-md-12 d-none ">
-                                    <img src="{% static 'img/banner_img_1.png' %}" class="img-fluid" alt="">
-                                  </div>
-                                </div>
-                            </div>
-                        </div><div class="single_banner_slider">
-                            <div class="row">
-                                <div class="col-lg-5 col-md-8">
-                                    <div class="banner_text">
-                                        <div class="banner_text_iner">
-                                            <h1>Giving back to the environment</h1>
+                                            <h1>ENVIRONMENT FRIENDLY</h1>
                                             <p>Patronizing us is helping the Eco system cause here at STOI we pride ourselves to giving back to the environment</p>
                                             <a href="{% url 'core:shop' %}" class="btn_3">buy now</a>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="banner_img d-none d-lg-block">
-                                    <img src="{% static 'img/banner_2.png' %}" alt="">
+                                  <div class="col-md-12">
+                                    <img src="{% static 'img/banner_2.png' %}" class="img-fluid" alt="">
+                                  </div>
                                 </div>
                             </div>
                         </div>
+                    
                         <!-- <div class="single_banner_slider">
                             <div class="row">
                                 <div class="col-lg-5 col-md-8">
@@ -93,46 +79,25 @@
     <!-- banner part start-->
 
 {% include 'expert.html' %}
-    <!-- feature_part start-->
-    <section class="feature_part padding_top py-3 px-3">
-        <div class="container-fluid">
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <div class="section_tittle text-center mt-5">
-                        <h2>Featured <span class="text-red">St Royal</span></h2>
-                    </div>
-                </div>
-            </div>
-            <div class="row align-items-center justify-content-between">
-                <div class="col-lg-12 col-sm-12">
-                    <div class="single_feature_post_text">
-                        <p>Premium Quality</p>
-                        <h3>The ordinary bulbs are phasing<br>  out and being replaced by LED <br> its no news anymore.</h3>
-                        <a href="{% url 'core:shop' %}" class="feature_btn">EXPLORE NOW <i class="fas fa-play"></i></a>
-                        <img src="{% static 'img/feature/feature_1.png' %}" alt="">
-                    </div>
-                </div>
-           
-        
-                </div>
-            </div>
-        </div>
-    </section>
+
     <!-- upcoming_event part start-->
 
    	
-    <div class="site-section about-section" id="about-section">
+    <div class="site-section about-section mt-5" id="about-section">
         <div class="container">
           <div class="row align-items-center mb-5 pb-5">
             <div class="col-lg-6 img-years mb-5 mb-lg-0">
-              <img src="{% static 'img/feature/feature_3.png' %}" alt="Image" class="img-fluid">
+              <img src="{% static 'img/deco.jpg' %}" alt="Image" class="img-fluid">
             </div>
             <div class="col-lg-6 ml-auto">
-              <span class="sub-title">Know Us</span>
-              <h1 class="mb-4">About Us</h1>
-              <p class="mb-4">We are the best at what we do give us a try without trial you can’t trust us so try us today</p>
+              <span class="sub-title">Durability Speaks</span>
+              <h1 class="mb-4">Get the best experience and smile later
+</h1>
+              <p class="mb-4">
+We keep a full line of long lasting stocked inventory and offer brand name qualities at the best possible price.
+</p>
          
-              <p><a href="{% url 'core:about' %}" class="btn_3">Read More About Us</a></p>
+              <p><a href="{% url 'core:about' %}" class="btn_3">Read More</a></p>
             </div>
           </div>
   
@@ -147,12 +112,12 @@
             <div class="col-lg-6 ml-auto">
               <span class="sub-title">Quote Me</span>
               <h1 class="mb-4">About Us</h1>
-              <p class="mb-4">We are the best at what we do give us a try without trial you can’t trust us so try us today</p>
+              <p class="mb-4">We serve you to the best of our ability bringing to you authentic products straight to your door step and give you authentic products at a cheaper rate with a guarantee you can trust</p>
          
-              <p><a href="{% url 'core:contact' %}" class="btn_3">get A Quote</a></p>
+              <p><a href="{% url 'core:contact' %}" class="btn_3 mb-2">get A Quote</a></p>
             </div>
             <div class="col-lg-6 img-years mb-5 mb-lg-0">
-                <img src="{% static 'img/light.svg' %}" alt="Image" class="img-fluid">
+                <img src="{% static 'img/bul.jpg' %}" alt="Image" class="mt-2 img-fluid">
               </div>
           </div>
   
@@ -161,46 +126,28 @@
       </div>
 
 
+      {% include 'quote.html' %}
 
-
-    <section class="ftco-counter mt-5" id="section-counter">
-    	<div class="container">
-				<div class="row">
-          <div class="col-md-6 col-lg-3 d-flex justify-content-center counter-wrap ftco-animate">
-            <div class="block-18 d-flex">
-              <div class="text d-flex align-items-center">
-                <strong class="number" data-number="50">35</strong>
-              </div>
-              <div class="text-2">
-              	<span>Years of <br>Experience</span>
-              </div>
+      <div class="site-section about-section mt-5" id="about-section">
+        <div class="container">
+          <div class="row align-items-center mb-5 pb-5">
+            <div class="col-lg-6 img-years mb-5 mb-lg-0">
+              <img src="{% static 'img/bulbs.jpg' %}" alt="Image" class="img-fluid">
+            </div>
+            <div class="col-lg-6 ml-auto">
+              <span class="sub-title">Shop Now</span>
+              <h1 class="mb-4">Shop With Us</h1>
+              <p class="mb-4">We only sell Original products with the aim to please our customers and also use it in giving back to the community we serve the our community and make life better for our environment</p>
+         
+              <p><a href="{% url 'core:shop' %}" class="btn_3">Shop Now</a></p>
             </div>
           </div>
-          <div class="col-md-6 col-lg-3 d-flex justify-content-center counter-wrap ftco-animate">
-            <div class="block-18 d-flex">
-              <div class="text d-flex align-items-center">
-                <strong class="number" data-number="8500">1000+</strong> <br>
-              </div>
-              <div class="text-2">
-              	<span>Project <br>Done</span>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6 col-lg-3 d-flex justify-content-center counter-wrap ftco-animate">
-            <div class="block-18 d-flex">
-              <div class="text d-flex align-items-center">
-                <strong class="number mr-1 text-white" data-number="378">50</strong>
-              </div>
-              <div class="text">
-              	<span>Professional <br>Expert</span>
-              </div>
-            </div>
-          </div>
-
-      
+  
+          
         </div>
-    	</div>
-    </section>
+      </div>
+
+
 
 
 

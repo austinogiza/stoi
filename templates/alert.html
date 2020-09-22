@@ -6,10 +6,10 @@
 		<div class="row mt-30">
 	
 			{% for message in messages %}
-			<div {% if message.tags %}  class="alert {{ message.tags }} alert-common alert-dismissible" {% endif %} role="alert">
+			<div {% if message.tags %}  class="alert col-md-12 {{ message.tags }} alert-common alert-dismissible" {% endif %} role="alert">
 			
 			 {{ message }}
-		</div>
+			</div>
 	
 			{% endfor %}
 			

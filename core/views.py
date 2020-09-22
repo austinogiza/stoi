@@ -9,14 +9,15 @@ from .forms import ReviewForm, CheckoutForm, RefundForm, CouponForm, ContactForm
 from django.utils import timezone
 from django.db.models import Q
 from django.urls import reverse_lazy, reverse
+from django.template.loader import render_to_string
+from django.core.mail import send_mail, EmailMessage
 # from .filters import ItemFilter
-
-
+from django.core.paginator import Paginator
 
 
 from .models import (
-    Item, 
-    Wishlist, 
+    Item,
+    Wishlist,
     Reviews,
     OrderItem,
     Order,
@@ -30,7 +31,7 @@ from .models import (
     HomesideBanner,
     ShoptopBanner,
     ShopbottomBanner,
-  
+
     Contact,
     Slider,
     Newsletter,
@@ -43,7 +44,7 @@ class DetailView(DetailView):
     model = Item
     context_object_name = 'product'
     template_name = "single-product.html"
-    
+
     def post(self, request, *args, **kwargs):
         form = ReviewForm(self.request.POST)
 
@@ -58,25 +59,26 @@ class DetailView(DetailView):
                 review=review
             )
             review.save()
-            messages.success(self.request,'Yay, you are amazing for the review')
+            messages.success(
+                self.request, 'Yay, you are amazing for the review')
             return redirect('core:details', slug=item.slug)
-        messages.error(self.request,'Oh no, you didn\'t any review')
+        messages.error(self.request, 'Oh no, you didn\'t any review')
         return redirect('core:details', slug=self.get_object().slug)
 
     def get_object(self, **kwargs):
         qs = super().get_object(**kwargs)
         return qs
 
-    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        trip = get_object_or_404(Item, slug=self.get_object().slug)
+        trip_related = trip.tags.similar_objects()
         context.update({
-                'form': ReviewForm(),
-           
-            }) 
+            'form': ReviewForm(),
+            "trip_related": trip_related
+
+        })
         return context
-
-
 
 
 class ShopView(ListView):
@@ -85,6 +87,20 @@ class ShopView(ListView):
     paginate_by = 24
     template_name = "shop.html"
 
+    def get_queryset(self):
+        qs = Item.objects.order_by('-pub_date')
+        return qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update(
+            {
+                'category_list': Category.objects.all(),
+                "shoptop": ShoptopBanner.objects.order_by('-date')[:2],
+                "shopside": ShopbottomBanner.objects.order_by('-date')[:1]
+            })
+        return context
+
 
 class AboutView(TemplateView):
     template_name = "about.html"
@@ -92,8 +108,7 @@ class AboutView(TemplateView):
 
 class HomeView(TemplateView):
     template_name = "index.html"
-    
-    
+
     def post(self, request, *args, **kwargs):
         newsletter = NewsletterForm(self.request.POST)
 
@@ -103,23 +118,25 @@ class HomeView(TemplateView):
 
             if existing == 0:
                 news = Newsletter(
-                email=email
-                    )
+                    email=email
+                )
                 news.save()
-                messages.success(self.request, 'You have signup for the newsletter')
+                messages.success(
+                    self.request, 'You have signup for the newsletter')
                 return redirect('core:home')
             else:
-                messages.success(self.request, 'You have already used this email')
+                messages.success(
+                    self.request, 'You have already used this email')
                 return redirect('core:home')
-        messages.error(self.request, 'You haven\'t signed up for the newsletter')
+        messages.error(
+            self.request, 'You haven\'t signed up for the newsletter')
         return redirect('core:home')
-
 
     def get_context_data(self, **kwargs):
         context = super(HomeView, self).get_context_data(**kwargs)
         context.update({
-       
-            'newsletter' : NewsletterForm()
+
+            'newsletter': NewsletterForm()
         })
         return context
 
@@ -142,11 +159,25 @@ class ContactView(TemplateView):
                 subject=subject,
                 email=email
             )
+
+            context = {
+                "name": name,
+                "subject": subject,
+                "message": message
+            }
             contact.save()
+            template = render_to_string('contact_template.html', context)
+            mail = EmailMessage(
+                'We have a new mail',
+                template,
+                "mail@stroyalstoi.com",
+                ['mail@stroyalstoi.com']
+
+            )
+            mail.fail_silently = False
+            mail.send()
+
             return redirect('core:contact-success')
-
-
-
 
     def get_context_data(self, **kwargs):
         context = super(ContactView, self).get_context_data(**kwargs)
@@ -154,7 +185,7 @@ class ContactView(TemplateView):
             'form': ContactForm()
         })
         return context
-    
+
 
 class ContactSuccessView(TemplateView):
     template_name = "contact-success.html"
@@ -184,7 +215,6 @@ def wishlist_product(request, slug):
     Wishlist.objects.create(user=request.user, item=item)
     messages.success(request, "You have added an item to your wishlist")
     return redirect('core:details', slug=slug)
-     
 
 
 @login_required
@@ -198,8 +228,6 @@ def wishlist_home(request, slug):
     Wishlist.objects.create(user=request.user, item=item)
     messages.success(request, "You have added an item to your wishlist")
     return redirect('core:home')
-
-
 
 
 @login_required
@@ -230,6 +258,7 @@ def add_to_cart(request, slug):
         order.items.add(order_item)
         messages.info(request, "This item was added to your cart.")
         return redirect("core:cart")
+
 
 @login_required
 def remove_from_cart(request, slug):
@@ -290,16 +319,14 @@ def remove_single_item_from_cart(request, slug):
         return redirect("core:details", slug=slug)
 
 
-
-
 class CheckoutView(LoginRequiredMixin, TemplateView):
     template_name = 'checkout.html'
-    
+
     def get(self, *args, **kwargs):
         try:
             order = Order.objects.get(user=self.request.user, ordered=False)
             form = CheckoutForm()
-     
+
             context = {
                 'form': form,
                 'couponform': CouponForm(),
@@ -318,53 +345,86 @@ class CheckoutView(LoginRequiredMixin, TemplateView):
         })
         return context
 
-    def post(self,request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         form = CheckoutForm(self.request.POST or None)
         order = Order.objects.get(user=self.request.user, ordered=False)
 
         if form.is_valid():
             user = self.request.user
             address = form.cleaned_data.get('address')
-            country  = form.cleaned_data.get('country')
+            country = form.cleaned_data.get('country')
             zip = form.cleaned_data.get('zip')
             state = form.cleaned_data.get('state')
             phone = form.cleaned_data.get('phone')
-            default = form.cleaned_data.get(
-                    'use_default_billing')
- 
-            if default:
-                checkout = Address(
+
+            checkout = Address(
                 user=user,
-                address = address,
-                country = country,
+                address=address,
+                country=country,
                 state=state,
                 zip=zip,
                 phone=phone,
-                default=True,
-            ) 
-                checkout.save()
-                order.address = checkout
-                order.save()
-                
-            else:
-                checkout = Address(
-                user=user,
-                address = address,
-                country = country,
-                state=state,
-                zip=zip,
-                phone=phone,
-       
-            ) 
-                checkout.save()
-                order.address = checkout
-                order.save()
+
+            )
+            checkout.save()
+            order.address = checkout
+            order.save()
+            amount = order.get_total()
+            user = self.request.user
+            email = self.request.user.email
+            name = self.request.user.first_name
+            name_2 = self.request.user.last_name
+            number = order.address.phone
+            address = order.address.address
+            country = order.address.country
+            state = order.address.state
+
+            context = {
+                'order': order,
+                'amount': amount,
+                'email': email,
+                'name': name,
+                'user': user,
+
+                "name_2": name_2,
+                "address": address,
+                "country": country,
+                'state': state,
+                'number': number
+            }
+            template = render_to_string('email_template.html', context)
+            sale = EmailMessage(
+                'Thank you for your order!!',
+                template,
+                "mail@stroyalstoi.com",
+                [email]
+
+            )
+            sale.fail_silently = False
+            sale.send()
+
+            template = render_to_string('sale_template.html', context)
+            sale = EmailMessage(
+                'We have received an order!!',
+                template,
+                "mail@stroyalstoi.com",
+                ['admin@stroyalstoi.com']
+
+            )
+            sale.fail_silently = False
+            sale.send()
+            order.ordered = True
+            order_items = order.items.all()
+
+            order_items.update(ordered=True)
+            for item in order_items:
+                item.save()
+            order.save()
+    # send email to user
+
             return redirect('core:payment')
         messages.error(self.request, 'You didn\'t enter any address')
         return redirect('core:checkout')
-    
-
-
 
 
 class CartView(LoginRequiredMixin, TemplateView):
@@ -376,7 +436,7 @@ class CartView(LoginRequiredMixin, TemplateView):
             order = Order.objects.get(user=self.request.user, ordered=False)
             context = {
                 'object': order,
-          
+
             }
             return render(self.request, 'cart.html', context)
         except ObjectDoesNotExist:
@@ -385,66 +445,73 @@ class CartView(LoginRequiredMixin, TemplateView):
 
 
 class PaystackView(LoginRequiredMixin, TemplateView):
-    template_name =   "confirmation.html"
-
-    def get(self, request, *args, **kwargs):
-        order = Order.objects.get(user=self.request.user, ordered=False)
-
-        user = self.request.user
-
-        email = self.request.user.email
-        amount = order.get_total()
-
-        context = {
-            'order':order,
-            "email":email,
-            "amount":amount
-        }
-
-        if order.address:
-            return render(self.request,  "confirmation.html", context)
-        else:
-            messages.error(self.request, "You have no billing address")
-            return redirect('core:checkout')    
-
-
+    template_name = "confirmation.html"
 
 
 class ConfirmView(TemplateView):
     template_name = 'payment-confirmation.html'
-    
+
     def get_context_data(self, **kwargs):
         context = super(ConfirmView, self).get_context_data(**kwargs)
-        
+
         context.update({
             'order': Order.objects.filter(user=self.request.user, ordered=True)
         })
         return context
 
 
-
-
 class FailedView(TemplateView):
     template_name = 'payment-failed.html'
 
 
-       
 class SearchListView(ListView):
     model = Item
     context_object_name = 'queryset'
-    
+    paginate_by = 18
     template_name = "search.html"
 
     def get_context_data(self, **kwargs):
         context = super(SearchListView, self).get_context_data(**kwargs)
         query = self.request.GET.get('q')
-        context['query'] = query
+        context.update({
+            'category_list': Category.objects.all(),
+            'query': query,
+                   "shoptop": ShoptopBanner.objects.order_by('-date')[:2],
+                "shopside": ShopbottomBanner.objects.order_by('-date')[:1]
+        })
         return context
-    
+
     def get_queryset(self):
         query = self.request.GET.get('q', None)
         if query is not None:
-            search = Q(title__icontains=query)| Q(description__icontains=query)
+            search = Q(title__icontains=query) | Q(
+                description__icontains=query)
             queryset = Item.objects.filter(search).distinct()[:20]
             return queryset
         return render(self.request, 'search.html')
+
+
+def CategoryView(request, slug):
+    instance = Item.objects.all()
+    categories = Category.objects.all()
+
+    if slug:
+        category = get_object_or_404(Category, slug=slug)
+        instance_list = instance.filter(category=category)
+        paginator = Paginator(instance_list, 18)
+        page = request.GET.get('page')
+        instance = paginator.get_page(page)
+        shoptop = ShoptopBanner.objects.order_by('-date')[:2]
+        shopside = ShopbottomBanner.objects.order_by('-date')[:1]
+    content = {
+        'categories': categories,
+        'instance': instance,
+        "instance_list": instance_list,
+        'category': category,
+        "shoptop": shoptop,
+        "shopside": shopside,
+
+
+
+    }
+    return render(request, 'category.html', content)
