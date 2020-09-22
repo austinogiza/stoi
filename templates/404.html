@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+<title>Error 404</title>
+{% endblock css %}
+
+{% block content %}
+
+      <div class="site-section about-section mt-5 py-5" id="about-section">
+  <div class="container">
+      <div class="row">
+        <div class="col-md-6 mx-auto text-center">
+          <div class="aa-error-area">
+            <h1>404</h1>
+            <span class="mt-3">Sorry! The page was not found</span>
+            <br>
+            <img  class="mt-3" src="{% static 'img/lost.svg' %}" alt=""> <br>
+           
+            <a href="{% url 'core:home' %}" class="mt-4 btn_3">Go to Homepage</a>
+          </div>
+        </div>
+      </div>
+    </div>
+      </div>
+{% endblock content %}

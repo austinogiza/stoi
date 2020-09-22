@@ -515,3 +515,7 @@ def CategoryView(request, slug):
 
     }
     return render(request, 'category.html', content)
+
+
+def handler404(request, exception):
+    return render(request, '404.html')
